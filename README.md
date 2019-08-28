@@ -1,3 +1,22 @@
+-----------
+Git
+-----------
+	git remote add upstream https://github.com/mbzama/docker-training-java.git
+
+	git fetch upstream
+
+	git checkout master
+
+	git stash
+
+	git merge upstream/master
+
+	git commit -am "Merged from upstream"
+
+	git push
+
+	git stash pop
+
 -------------
 Cheatsheet
 -------------
@@ -29,8 +48,8 @@ Cheatsheet
 
   To view logs
   
-    docker logs -f {container_name}
-    docker logs -f {container_name} --tail 100
+       docker logs -f {container_name}
+       docker logs -f {container_name} --tail 100
 
 
 -------------
@@ -119,12 +138,12 @@ spring-boot
      -------------
      Build docker image
      -------------
-       docker build -t spring-boot-app .
+       docker build -t spring-boot-demo .
 
      -------------
      Run app as Docker container
      -------------
-       docker run -p 9999:8085 --name springboot-c1 spring-boot-app
+       docker run -p 9999:8085 --name springboot-c1 spring-boot-demo
        
        Access the app using
            Windows: http://192.168.99.100:9999/greet?name=zama  (Get the IP using `docker-machine ip` command)
@@ -136,11 +155,11 @@ Upload image to public registry (dockerhub)
 -------------
    1. Create account in dockerhub: 
    
-          https://hub.docker.com
+              https://hub.docker.com
 
   2. Create docker repository with name as: 
   
-         java8-app
+              java8-app
 	    	
   3. Login to dockerhub registry
   
@@ -168,11 +187,76 @@ To deploy or publish image
     
     mvn dockerfile:push
         
-    
+
+-------------
+Working with Volumes
+-------------
+Create folder and file
+	`mkdir data
+	nano run.sh`
+	
+Add this content 
+	`echo '<EMP_ID> Running run.sh file - '$(date)`
+	
+Copy from Host machine to Docker Container:
+   `docker cp /host_dir container_name:/container_dir`
+
+Copy from Docker Container to Host machine:
+   `docker cp container_name:/container_dir /host_dir` 
+   
+    Example:
+    	Copy file from host machine to container 
+	   		docker cp data/ java8-app-c1:/data	
+	
+     	Login to the docker container
+	   		docker exec -it java8-app-c1
+	
+     	Verify the file
+	   		ls -l data
+	   		cat data/run.sh
+	
+     	Run the file
+	   		sh run.sh
+
+-------------
+Docker Compose
+-------------
+
+To build and start:
+
+	docker-compose up --build
+
+
+To build:
+
+	docker-compose build
+
+
+To create/run containers:
+
+	docker-compose up
+
+
+To stop containers:
+
+	docker-compose stop
+	
+	
+To stop and remove all containers:
+
+	docker-compose down
+
+
+To start particular service:
+
+	docker-compose up {service_name}
+
 -------------
 Scaling
 -------------
 We can scale the containers easily using docker-compose
+
         For standalone:
                docker-compose scale standalone=5
-			   
+		
+
